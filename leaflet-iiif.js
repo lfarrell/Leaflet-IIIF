@@ -26,7 +26,7 @@ L.TileLayer.Iiif = L.TileLayer.extend({
     var _this = this,
       x = coords.x,
       y = (coords.y),
-      zoom = _this._map.getZoom(),
+      zoom = _this._getZoomForUrl(),
       scale = Math.pow(2, _this.maxNativeZoom - zoom),
       tileBaseSize = _this.options.tileSize * scale,
       minx = (x * tileBaseSize),
@@ -72,7 +72,7 @@ L.TileLayer.Iiif = L.TileLayer.extend({
         ne = map.options.crs.pointToLatLng(L.point(imageSize.x, 0), initialZoom),
         bounds = L.latLngBounds(sw, ne);
 
-      map.fitBounds(bounds, true);
+      map.fitBounds(bounds);
 
       // Set maxZoom for map
       map._layersMaxZoom = _this.maxZoom;
@@ -167,9 +167,9 @@ L.TileLayer.Iiif = L.TileLayer.extend({
   _templateUrl: function() {
     return this._infoToBaseUrl() + '{region}/{size}/{rotation}/{quality}.{format}';
   },
-  _tileShouldBeLoaded: function(coords) {
+  _isValidTile: function(coords) {
     var _this = this,
-      zoom = _this._map.getZoom(),
+      zoom = _this._getZoomForUrl(),
       sizes = _this._tierSizes[zoom],
       x = coords.x,
       y = (coords.y);
